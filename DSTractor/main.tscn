@@ -1,0 +1,255 @@
+[gd_scene load_steps=28 format=3 uid="uid://c308n0slnw28n"]
+
+[ext_resource type="Texture2D" uid="uid://yx1rat05bsgx" path="res://Textures/Prototype/Green/texture_09.png" id="1_3tf6l"]
+[ext_resource type="Script" path="res://car.gd" id="1_l6esi"]
+[ext_resource type="PackedScene" uid="uid://ba8557sfiu6bf" path="res://truck_clean.glb" id="2_ocmr8"]
+[ext_resource type="Script" path="res://ws_server.gd" id="5_uq4cw"]
+[ext_resource type="Script" path="res://sender.gd" id="6_hxr8t"]
+[ext_resource type="Script" path="res://CameraMovement.gd" id="6_mossl"]
+[ext_resource type="PackedScene" uid="uid://b8npc7ue12vne" path="res://room.glb" id="7_oxcmh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x5qqr"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_6ume4"]
+sky_material = SubResource("ProceduralSkyMaterial_x5qqr")
+
+[sub_resource type="Environment" id="Environment_gniwf"]
+background_mode = 2
+sky = SubResource("Sky_6ume4")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vs308"]
+albedo_texture = ExtResource("1_3tf6l")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5rsi7"]
+material = SubResource("StandardMaterial3D_vs308")
+size = Vector2(100, 100)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_eike1"]
+points = PackedVector3Array(50.7837, 0.793495, 50.7837, -50.7837, -0.793495, -50.7837, -50.7837, 0.793495, -50.7837, 50.7837, -0.793495, -50.7837, -50.7837, -0.793495, 50.7837, -50.7837, 0.793495, 50.7837, 50.7837, 0.793495, -50.7837, 50.7837, -0.793495, 50.7837)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d6sgs"]
+size = Vector3(1, 1, 2.88171)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fw0ph"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_as55h"]
+material = SubResource("StandardMaterial3D_fw0ph")
+top_radius = 0.4
+bottom_radius = 0.4
+height = 0.2
+radial_segments = 8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l2bsg"]
+size = Vector3(18.189, 9.01001, 1.55579)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a1dkr"]
+size = Vector3(5.57182, 9.01001, 11.4026)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vub4u"]
+size = Vector3(5.57182, 9.01001, 11.4026)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rjtf7"]
+size = Vector3(0.694112, 9.01001, 11.5421)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d7wax"]
+size = Vector3(0.674145, 9.01001, 25.9067)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_egc6x"]
+size = Vector3(24.0112, 9.01001, 1.16235)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7acpn"]
+size = Vector3(26.853, 9.01001, 1.16235)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nadsj"]
+size = Vector3(6.26266, 2.28668, 2.13968)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mbh24"]
+size = Vector3(13.3876, 3.2742, 4.21097)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mfr8t"]
+size = Vector3(2.28941, 3.38612, 0.980992)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fykit"]
+size = Vector3(1.83855, 3.38612, 3.01872)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gniwf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.998301, 0.0571919, -0.0111376, 0.00385206, 0.125949, 0.992029, 0.0581388, -0.990387, 0.125515, -13.2523, 10.9728, 2.51558)
+shadow_enabled = true
+shadow_bias = 0.337
+
+[node name="CameraServer" type="Node" parent="."]
+script = ExtResource("5_uq4cw")
+
+[node name="Sender" type="Node" parent="." node_paths=PackedStringArray("ws", "camera")]
+script = ExtResource("6_hxr8t")
+ws = NodePath("../CameraServer")
+camera = NodePath("../Camera3D")
+
+[node name="floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.801375, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+visible = false
+mesh = SubResource("PlaneMesh_5rsi7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+shape = SubResource("ConvexPolygonShape3D_eike1")
+
+[node name="car" type="VehicleBody3D" parent="." node_paths=PackedStringArray("left", "right")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 6)
+script = ExtResource("1_l6esi")
+left = [NodePath("front_left"), NodePath("back_left"), NodePath("middle_left")]
+right = [NodePath("front_right"), NodePath("back_right"), NodePath("middle_right")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201917, 0.11908)
+shape = SubResource("BoxShape3D_d6sgs")
+
+[node name="front_left" type="VehicleWheel3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.1, 1)
+visible = false
+use_as_traction = true
+wheel_roll_influence = 1.0
+wheel_radius = 0.4
+suspension_travel = 0.4
+suspension_stiffness = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="car/front_left"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_as55h")
+
+[node name="middle_left" type="VehicleWheel3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.1, 0)
+visible = false
+use_as_traction = true
+wheel_roll_influence = 1.0
+wheel_radius = 0.4
+suspension_travel = 0.4
+suspension_stiffness = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="car/middle_left"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_as55h")
+
+[node name="back_left" type="VehicleWheel3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 0.1, -1)
+visible = false
+use_as_traction = true
+wheel_roll_influence = 1.0
+wheel_radius = 0.4
+suspension_travel = 0.4
+suspension_stiffness = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="car/back_left"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_as55h")
+
+[node name="front_right" type="VehicleWheel3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.1, 1)
+visible = false
+use_as_traction = true
+wheel_roll_influence = 1.0
+wheel_radius = 0.4
+suspension_travel = 0.4
+suspension_stiffness = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="car/front_right"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_as55h")
+
+[node name="middle_right" type="VehicleWheel3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.1, 0)
+visible = false
+use_as_traction = true
+wheel_roll_influence = 1.0
+wheel_radius = 0.4
+suspension_travel = 0.4
+suspension_stiffness = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="car/middle_right"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_as55h")
+
+[node name="back_right" type="VehicleWheel3D" parent="car"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0.1, -1)
+visible = false
+use_as_traction = true
+wheel_roll_influence = 1.0
+wheel_radius = 0.4
+suspension_travel = 0.4
+suspension_stiffness = 50.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="car/back_right"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_as55h")
+
+[node name="truck_clean" parent="car" instance=ExtResource("2_ocmr8")]
+transform = Transform3D(-9.35424e-08, 0, -2.14, 0, 2.14, 0, 2.14, 0, -9.35424e-08, -0.5, 0, -0.298839)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.999847, -0.0123407, 0.0123407, 0, 0.707107, 0.707106, -0.0174525, 0.706999, -0.706999, 0, 9.435, 0)
+current = true
+script = ExtResource("6_mossl")
+
+[node name="location" type="StaticBody3D" parent="."]
+
+[node name="room" parent="location" instance=ExtResource("7_oxcmh")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -11, 7.2, 0.3)
+
+[node name="banner" type="CollisionShape3D" parent="location"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00630617, 6.22544, 13.9073)
+shape = SubResource("BoxShape3D_l2bsg")
+
+[node name="wall1" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.993373, 0, 0.114937, 0, 1, 0, -0.114937, 0, 0.993373, 12.2013, 6.22544, -14.2909)
+shape = SubResource("BoxShape3D_a1dkr")
+
+[node name="wall5" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.993373, 0, 0.114937, 0, 1, 0, -0.114937, 0, 0.993373, 14.0093, 6.22544, 8.43223)
+shape = SubResource("BoxShape3D_vub4u")
+
+[node name="wall6" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.993373, 0, 0.114937, 0, 1, 0, -0.114937, 0, 0.993373, 15.7234, 6.22544, -3.23566)
+shape = SubResource("BoxShape3D_rjtf7")
+
+[node name="wall2" type="CollisionShape3D" parent="location"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.937, 6.22544, 1.91444)
+shape = SubResource("BoxShape3D_d7wax")
+
+[node name="wall3" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.939692, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.939692, -2.83189, 6.22544, -15.4468)
+shape = SubResource("BoxShape3D_egc6x")
+
+[node name="wall4" type="CollisionShape3D" parent="location"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.06121, 6.22544, 15.1212)
+shape = SubResource("BoxShape3D_7acpn")
+
+[node name="table1" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.940881, 0, 0.338738, 0, 1, 0, -0.338738, 0, 0.940881, -9.34474, 2.86378, -11.4474)
+shape = SubResource("BoxShape3D_nadsj")
+
+[node name="table2" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.940881, 0, 0.338738, 0, 1, 0, -0.338738, 0, 0.940881, 2.9595, 3.35754, -14.7639)
+shape = SubResource("BoxShape3D_mbh24")
+
+[node name="flower1" type="CollisionShape3D" parent="location"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 8.20347, 4.35155, -9.89705)
+shape = SubResource("BoxShape3D_mfr8t")
+
+[node name="flower2" type="CollisionShape3D" parent="location"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0809, 3.4135, 4.68769)
+shape = SubResource("BoxShape3D_mfr8t")
+
+[node name="flower3" type="CollisionShape3D" parent="location"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.434, 3.4135, 13.212)
+shape = SubResource("BoxShape3D_fykit")
